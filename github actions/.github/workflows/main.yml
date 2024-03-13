@@ -1,0 +1,17 @@
+name: TBT demo
+run-name: ${{ github.actor }} is Showing Demo
+# -------------------------------
+on: 
+  workflow_dispatch
+# Above means whenever there is a chnage mande , pls run it 
+
+# job: COllection of Tasks
+jobs:
+  Setup:
+    runs-on: ubuntu-latest
+    # Ununtu is the OS where my github action is running AKA RUNNER
+    steps: # What to do next
+       - run: echo " HI this is TBT Demo"
+       - run: cat /etc/os-release
+       
+    

@@ -1,0 +1,9 @@
+trigger:
+  branches:
+    include:
+      - main
+
+stages:
+- template: 0-build-template.yml  # Reference your template file here
+  parameters:
+    vmImage: 'ubuntu-latest'

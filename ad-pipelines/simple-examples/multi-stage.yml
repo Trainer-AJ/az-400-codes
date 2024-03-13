@@ -1,0 +1,36 @@
+# Multi stage
+trigger:
+  branches:
+    include:
+      - main
+
+stages:
+- stage: Build
+  jobs:
+  - job: BuildJob
+    displayName: 'Build Job'
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - script: echo 'Building...'
+      displayName: 'Build Step'
+
+- stage: Test
+  jobs:
+  - job: TestJob
+    displayName: 'Test Job'
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - script: echo 'Testing...'
+      displayName: 'Test Step'
+
+- stage: Deploy
+  jobs:
+  - job: DeployJob
+    displayName: 'Deploy Job'
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - script: echo 'Deploying...'
+      displayName: 'Deploy Step'

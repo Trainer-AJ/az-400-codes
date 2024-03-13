@@ -1,0 +1,30 @@
+trigger:
+  branches:
+    include:
+    - refs/heads/Features/A
+  paths:
+    include:
+    - timer
+resources:
+  repositories:
+  - repository: self
+    type: git
+    ref: refs/heads/Features/A
+jobs:
+- job: Job_1
+  displayName: Job1 - Prepare Code
+  pool:
+    name: 12march
+  steps:
+  - checkout: self
+    fetchDepth: 1
+  - task: ArchiveFiles@2
+    displayName: compress files
+    inputs:
+      rootFolderOrFile: timer
+      includeRootFolder: false
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact: drop'
+    inputs:
+      PathtoPublish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+...

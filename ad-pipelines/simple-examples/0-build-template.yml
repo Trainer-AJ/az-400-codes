@@ -1,0 +1,17 @@
+# filename: build-template.yml
+
+parameters:
+- name: vmImage
+  type: string
+  default: 'ubuntu-latest'
+
+stages:
+- stage: Build
+  jobs:
+  - job: BuildJob
+    displayName: 'Build Job'
+    pool:
+      vmImage: ${{ parameters.vmImage }}
+    steps:
+    - script: echo 'Building...'
+      displayName: 'Build Step'
