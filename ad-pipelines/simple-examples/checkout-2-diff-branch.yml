@@ -1,0 +1,26 @@
+# Checkout Migrated@bug-fixes/bug-B to s
+# https://learn.microsoft.com/en-us/azure/devops/pipelines/process/resources?view=azure-devops&tabs=schema#define-a-repositories-resource
+# Ref vs Branch: See, branchName needs to be fully resolved before GIT can actually identify it. The fully resolved name will be refs/heads/branchName.
+# source: https://stackoverflow.com/questions/1526471/git-difference-between-branchname-and-refs-heads-branchname
+trigger:
+- master
+- bug-fixes/*
+
+pool:
+  vmImage: ubuntu-latest
+
+resources:
+  repositories:
+  - repository: bug-fixes # nickname
+    type: git # type 
+    name: "my process tyoe/Migrated" # Projectname / repo 
+    ref: refs/heads/bug-fixes/bug-B  # branch
+
+steps:
+- checkout: bug-fixes
+- bash: ls
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(build.sourcesDirectory)'
+    includeRootFolder: false
+- task: PublishBuildArtifacts@1
