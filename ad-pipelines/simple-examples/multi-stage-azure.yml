@@ -1,0 +1,67 @@
+name: Deploy-2-Azure-multi-stage-yaml
+
+trigger:
+- main
+
+parameters:
+  - name: env
+    displayName: Pick Enviroment 
+    default: Stage
+    values:
+      - Dev
+      - Stage
+      - Prod
+
+# ###########################################################
+#                             STAGE-1
+# ############################################################
+stages:
+- stage: Prepare
+  pool:
+    vmImage: ubuntu-latest
+  jobs:
+# ------------------- JOB=1 -----------------------
+  - job: setup_infra
+    steps:
+    # TASk-1
+      - script: echo Create a resource group
+   # TASk -2
+      - task: AzureCLI@2
+        displayName: 'Create RG'
+        inputs:
+          azureSubscription: 'esi-az400@hotmail-11-march (ae11fc46-c878-4676-a97f-5386abc94e5b)'
+          scriptType: 'bash'
+          scriptLocation: 'inlineScript'
+          inlineScript: 'az group create -n ${{ parameters.env }}-env-rg -l eastus'
+# ----------------------  JOB-2 -----------------------
+  - job: run
+    steps:
+      - task: AzureCLI@2
+        displayName: 'List RG'
+        inputs:
+          azureSubscription: 'esi-az400@hotmail-11-march (ae11fc46-c878-4676-a97f-5386abc94e5b)'
+          scriptType: 'bash'
+          scriptLocation: 'inlineScript'
+          inlineScript: 'az group list'
+
+######################################################
+                           # STAGE - 2
+# ######################################################
+- stage: deploy
+  pool:
+    vmImage: windows-latest
+  # condition: succeded()
+  jobs:
+  - job: Vnet
+    steps:
+     - task: AzureCLI@2
+       displayName: Create Vnet
+       inputs:
+          azureSubscription: 'esi-az400@hotmail-11-march (ae11fc46-c878-4676-a97f-5386abc94e5b)'
+          scriptType: 'bash'
+          scriptLocation: 'inlineScript'
+          inlineScript: 'az network vnet create --name ${{ parameters.env }}-vnet-1 --resource-group ${{ parameters.env }}-env-rg --address-prefix 10.0.0.0/16 --subnet-name subnet-1 --subnet-prefixes 10.0.0.0/24'
+ 
+  - job: List 
+    steps:
+      - script: echo This is job-2
