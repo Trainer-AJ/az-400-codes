@@ -1,0 +1,39 @@
+name: kv demo
+
+trigger: none
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+- group: common_vars
+- template: templates/vars.yml  # Template reference
+
+
+steps:
+# File: azure-pipelines.yml
+- script: echo My favorite vegetable is ${{ variables.favoriteVeggie }} and ${{ variables.sql_server }} .
+- script: |
+    echo "variable-1: $(susbcription_id) and $(product_owner_name)"
+- task: AzureKeyVault@2
+  inputs:
+    azureSubscription: 'esi-az400@hotmail-11-march (ae11fc46-c878-4676-a97f-5386abc94e5b)'
+    KeyVaultName: 'ind-27march-cts-demo'
+    SecretsFilter: '*'
+    RunAsPreJob: true
+  displayName: download secrets from Key vault
+
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: 'echo $(usr) and $(pswd)'
+  
+
+# - task: AzureCLI@2
+#   inputs:
+#     azureSubscription: 'esi-az400@hotmail-11-march (ae11fc46-c878-4676-a97f-5386abc94e5b)'
+#     scriptType: 'bash'
+#     scriptLocation: 'inlineScript'
+#     inlineScript: |
+#       az group create -n mygroup -l eastus
+#       az sql server create -l eastus -g mygroup -n pipelinedemo98 -u $(usr) -p $(pswd)
