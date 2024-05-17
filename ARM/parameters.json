@@ -10,21 +10,21 @@
   },
   "parameters": {
     "storageAccountName": {
-      "value": "<provide-storage-account-name>",
+      "value": "armdemo934903",
       "type": "string",
       "metadata": {
         "description": "Specifies the name of the Azure Storage account."
       }
     },
     "containerPrefix": {
-      "value": "logs",
+      "value": "arm-demo",
       "type": "string",
       "metadata": {
         "description": "Specifies the prefix of the blob container names."
       }
     },
     "location": {
-      "value": "<provide-resource-group-location>",
+      "value": "southindia",
       "type": "string",
       "metadata": {
         "description": "Specifies the location in which the Azure Storage resources should be deployed."
