@@ -12,31 +12,38 @@ trigger:
 # pool:
 #   name: Default
 
-pool:
-  vmImage: ubuntu-latest
+stages:
+- stage: A
+  displayName: Infra Setup
+  jobs: 
+  - job: A
+    pool:
+      vmImage: ubuntu-latest
 
-variables:
-# Variable Group
-- group: infosys
+    variables:
+    # Variable Group
+    - group: infosys
 
-- name: STR
-  value: yamldemo844943
-  # str = 8475346
+    - name: STR
+      value: yamldemo844943
+      # str = 8475346
 
-- name: REGION
-  value: centralindia
+    - name: REGION
+      value: centralindia
 
-- name: RG
-  value: yaml-pipeline
+    - name: RG
+      value: yaml-pipeline
 
-jobs:
 
-- template: ad-pipelines/simple-examples/storage-account/create-template.yml
+  - template: ad-pipelines/simple-examples/storage-account/create-template.yml
 
-- job: PipelineJob
-  steps:
-  - bash: 'echo from pipeline => $(STR)'
-  - bash: 'echo from Vars Group => $(STR)'
-  - bash: 'echo from top-right => $(top-right)'
-  
+- stage: B
+  displayName: App Setup
+  dependsOn: A
+  jobs:
+    - job: A
+      steps:
+      - bash: echo 'Wow'
+
+
 
