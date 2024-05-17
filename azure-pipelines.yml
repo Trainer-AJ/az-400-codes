@@ -30,36 +30,13 @@ variables:
   value: yaml-pipeline
 
 jobs:
-- job: A
+
+- template: ad-pipelines/simple-examples/storage-account/create-template.yml
+
+- job: PipelineJob
   steps:
   - bash: 'echo from pipeline => $(STR)'
   - bash: 'echo from Vars Group => $(STR)'
   - bash: 'echo from top-right => $(top-right)'
   
 
-- job: B
-
-  steps:
-      - task: AzureCLI@2
-        inputs:
-          azureSubscription: 'connect-2-Azure'
-          scriptType: 'bash'
-          scriptLocation: 'inlineScript'
-          inlineScript: 'az storage account check-name --name $(STR)'
-        displayName: Check if Name Valid
-
-      - task: AzureCLI@2
-        inputs:
-          azureSubscription: 'connect-2-Azure'
-          scriptType: 'bash'
-          scriptLocation: 'inlineScript'
-          inlineScript: 'az group create -n $(RG) -l $(REGION)'
-        displayName: Create RG
-
-      - task: AzureCLI@2
-        inputs:
-          azureSubscription: 'connect-2-Azure'
-          scriptType: 'bash'
-          scriptLocation: 'inlineScript'
-          inlineScript: 'az storage account create -n $(STR) -g $(RG) -l $(REGION) --sku Standard_LRS'
-        displayName: Create Storage Account
