@@ -59,7 +59,7 @@ stages:
           azureSubscription: 'connect-2-Azure'
           scriptType: 'bash'
           scriptLocation: 'inlineScript'
-          inlineScript: 'az sql server create -l $(REGION) -g $(RG) -n myserver -u $(DB-USER) -p $(DB-PSWD)'
+          inlineScript: 'az sql server create -l $(REGION) -g $(RG) -n yamldemo7634783 -u $(DB-USER) -p $(DB-PSWD)'
         displayName: Create SQL Server
 
 
