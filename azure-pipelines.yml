@@ -6,6 +6,13 @@ trigger:
 - main
 - features/*
 
+variables:
+    - name: REGION
+      value: centralindia
+
+    - name: RG
+      value: yaml-pipeline
+
 # where to run ?
 
 # Self Hosted 
@@ -28,14 +35,8 @@ stages:
       value: yamldemo844943
       # str = 8475346
 
-    - name: REGION
-      value: centralindia
 
-    - name: RG
-      value: yaml-pipeline
-
-
-  - template: ad-pipelines/simple-examples/storage-account/create-template.yml
+  # - template: ad-pipelines/simple-examples/storage-account/create-template.yml
 
 - stage: B
   displayName: App Setup
@@ -44,6 +45,21 @@ stages:
     - job: A
       steps:
       - bash: echo 'Wow'
+      
+      - task: AzureKeyVault@2
+        inputs:
+          azureSubscription: 'connect-2-Azure'
+          KeyVaultName: 'yaml-kv-demo8954'
+          SecretsFilter: '*'
+          RunAsPreJob: false
+        displayName: Downloads secret from Vault
 
+      - task: AzureCLI@2
+        inputs:
+          azureSubscription: 'connect-2-Azure'
+          scriptType: 'bash'
+          scriptLocation: 'inlineScript'
+          inlineScript: 'az sql server create -l $(REGION) -g $(RG) -n myserver -u $(DB-USER) -p $(DB-PSWD)'
+        displayName: Create SQL Server
 
 
