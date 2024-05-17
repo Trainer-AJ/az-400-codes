@@ -1,0 +1,20 @@
+trigger: 
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: AzureResourceManagerTemplateDeployment@3
+  inputs:
+    deploymentScope: 'Resource Group'
+    azureResourceManagerConnection: 'connect-2-Azure'
+    subscriptionId: 'bec4deb2-4bf5-41f2-95db-b2f63417c59e'
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: 'yaml-arm-demo'
+    location: 'East US'
+    templateLocation: 'Linked artifact'
+    csmFile: 'ARM/storage-account.json'
+    csmParametersFile: 'ARM/parameters.json'
+    deploymentMode: 'Incremental'
+
