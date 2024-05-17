@@ -40,7 +40,7 @@ steps:
     azureSubscription: 'connect-2-Azure'
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
-    inlineScript: 'az group -n $(RG) -l $(REGION)'
+    inlineScript: 'az group create -n $(RG) -l $(REGION)'
   displayName: Create RG
 
 - task: AzureCLI@2
