@@ -1,0 +1,25 @@
+# AUTHOR: AJ
+# PURPOSE: List all files 
+
+# When to run ?
+trigger:
+- main
+- features/*
+
+# where to run ?
+
+# Self Hosted 
+# pool:
+#   name: Default
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- script: echo Hello, world!
+  displayName: 'Run a one-line script'
+
+- script: |
+    ls
+    echo we are in $(pwd) directory
+  displayName: 'Run a multi-line script'
