@@ -2,9 +2,9 @@
 # PURPOSE: List all files 
 
 # When to run ?
-trigger:
-- main
-- features/*
+# trigger:
+# - main
+# - features/*
 
 variables:
     - name: REGION
