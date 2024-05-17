@@ -16,6 +16,9 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
+# Variable Group
+- group: infosys
+
 - name: STR
   value: yamldemo844943
   # str = 8475346
@@ -26,27 +29,36 @@ variables:
 - name: RG
   value: yaml-pipeline
 
-steps:
-- task: AzureCLI@2
-  inputs:
-    azureSubscription: 'connect-2-Azure'
-    scriptType: 'bash'
-    scriptLocation: 'inlineScript'
-    inlineScript: 'az storage account check-name --name $(STR)'
-  displayName: Check if Name Valid
+jobs:
+- job: A
+  steps:
+  - bash: 'echo from pipeline => $(STR)'
+  - bash: 'echo from Vars Group => $(STR)'
+  
 
-- task: AzureCLI@2
-  inputs:
-    azureSubscription: 'connect-2-Azure'
-    scriptType: 'bash'
-    scriptLocation: 'inlineScript'
-    inlineScript: 'az group create -n $(RG) -l $(REGION)'
-  displayName: Create RG
+- job: B
 
-- task: AzureCLI@2
-  inputs:
-    azureSubscription: 'connect-2-Azure'
-    scriptType: 'bash'
-    scriptLocation: 'inlineScript'
-    inlineScript: 'az storage account create -n $(STR) -g $(RG) -l $(REGION) --sku Standard_LRS'
-  displayName: Create Storage Account
+  steps:
+      - task: AzureCLI@2
+        inputs:
+          azureSubscription: 'connect-2-Azure'
+          scriptType: 'bash'
+          scriptLocation: 'inlineScript'
+          inlineScript: 'az storage account check-name --name $(STR)'
+        displayName: Check if Name Valid
+
+      - task: AzureCLI@2
+        inputs:
+          azureSubscription: 'connect-2-Azure'
+          scriptType: 'bash'
+          scriptLocation: 'inlineScript'
+          inlineScript: 'az group create -n $(RG) -l $(REGION)'
+        displayName: Create RG
+
+      - task: AzureCLI@2
+        inputs:
+          azureSubscription: 'connect-2-Azure'
+          scriptType: 'bash'
+          scriptLocation: 'inlineScript'
+          inlineScript: 'az storage account create -n $(STR) -g $(RG) -l $(REGION) --sku Standard_LRS'
+        displayName: Create Storage Account
