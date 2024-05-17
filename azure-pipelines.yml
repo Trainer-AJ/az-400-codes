@@ -34,6 +34,7 @@ jobs:
   steps:
   - bash: 'echo from pipeline => $(STR)'
   - bash: 'echo from Vars Group => $(STR)'
+  - bash: 'echo from top-right => $(top-right)'
   
 
 - job: B
