@@ -15,11 +15,38 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+variables:
+- name: STR
+  value: yamldemo844943
+  # str = 8475346
 
-- script: |
-    ls
-    echo we are in $(pwd) directory
-  displayName: 'Run a multi-line script'
+- name: REGION
+  value: centralindia
+
+- name: RG
+  value: yaml-pipeline
+
+steps:
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: 'connect-2-Azure'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: 'az storage account check-name --name $(STR)'
+  displayName: Check if Name Valid
+
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: 'connect-2-Azure'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: 'az group -n $(RG) -l $(REGION)'
+  displayName: Create RG
+
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: 'connect-2-Azure'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: 'az storage account create -n $(STR) -g $(RG) -l $(REGION) --sku Standard_LRS'
+  displayName: Create Storage Account
