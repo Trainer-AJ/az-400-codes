@@ -2,9 +2,9 @@
 # PURPOSE: List all files 
 
 # When to run ?
-# trigger:
-# - main
-# - features/*
+trigger:
+- main
+- features/*
 
 variables:
     - name: REGION
@@ -29,7 +29,7 @@ stages:
 
     variables:
     # Variable Group
-    - group: infosys
+    # - group: infosys
 
     - name: STR
       value: yamldemo844943
@@ -44,17 +44,25 @@ stages:
     pool:
       vmImage: 'Ubuntu-latest'
     # creates an environment if it doesn't exist
-    environment: 
-      name: 'yaml'
-      resourceName: vm
-      resourceType: virtualMachine
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - script: |
-             sudo apt update -y 
-             sudo apt install apache2 -y 
+    # environment: 
+    #   name: 'yaml'
+    #   resourceName: vm
+    #   resourceType: virtualMachine
+    # strategy:
+    #   runOnce:
+    #     deploy:
+    #       steps:
+    #       - script: |
+    #          sudo apt update -y 
+    #          sudo apt install apache2 -y 
+
+  - job: myJob
+    timeoutInMinutes: 10
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - bash: echo "Hello world"
+  
 
   # - template: ad-pipelines/simple-examples/storage-account/create-template.yml
 
