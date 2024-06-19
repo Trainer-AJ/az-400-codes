@@ -1,0 +1,101 @@
+# AUTHOR: AJ
+# PURPOSE: Review All Major concepts of Azure Pipelines
+
+# When to run ?
+trigger:
+- main
+- features/*
+
+variables:
+    - name: REGION
+      value: centralindia
+
+    - name: RG
+      value: yaml-pipeline
+
+# where to run ?
+
+# Self Hosted 
+# pool:
+#   name: Default
+
+stages:
+- stage: A
+  displayName: Infra Setup
+  jobs: 
+  - job: A
+    pool:
+      vmImage: ubuntu-latest
+
+    variables:
+    # Variable Group
+    # - group: infosys
+
+    - name: STR
+      value: yamldemo844943
+      # str = 8475346
+    steps:
+      - bash: 'echo $(STR) ==> Print Env'
+
+##################################################
+#   Create a Env on Azure VM then run below      #
+##################################################
+- stage: deploy
+  displayName: on prem setup
+  jobs:
+  # - deployment: DeployWeb
+  #   displayName: deploy Web App
+  #   pool:
+  #     vmImage: 'Ubuntu-latest'
+    # creates an environment if it doesn't exist
+    # environment: 
+    #   name: 'yaml'
+    #   resourceName: vm
+    #   resourceType: virtualMachine
+    # strategy:
+    #   runOnce:
+    #     deploy:
+    #       steps:
+    #       - script: |
+    #          sudo apt update -y 
+    #          sudo apt install apache2 -y 
+
+  - job: myJob
+    timeoutInMinutes: 10
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - bash: echo "Hello world"
+  
+##################################################
+#   Reuse Pipeline as a Template                 #
+##################################################
+  # - template: ad-pipelines/simple-examples/storage-account/create-template.yml
+
+- stage: B
+  displayName: App Setup
+  dependsOn: A
+  jobs:
+    - job: A
+      steps:
+      - bash: echo 'Wow'
+
+##################################################
+#   Use Key vault to create Azure SQL server     #
+##################################################
+      - task: AzureKeyVault@2
+        inputs:
+          azureSubscription: 'Azure Pass - Sponsorship (91fe4193-95fd-44eb-aa50-066ae59bbc45)'
+          KeyVaultName: 'yaml-kv-demo8954'
+          SecretsFilter: '*'
+          RunAsPreJob: false
+        displayName: Downloads secret from Vault
+
+      - task: AzureCLI@2
+        inputs:
+          azureSubscription: 'Azure Pass - Sponsorship (91fe4193-95fd-44eb-aa50-066ae59bbc45)'
+          scriptType: 'bash'
+          scriptLocation: 'inlineScript'
+          inlineScript: 'az sql server create -l $(REGION) -g $(RG) -n yamldemo7634783 -u $(DB-USER) -p $(DB-PSWD)'
+        displayName: Create SQL Server
+
