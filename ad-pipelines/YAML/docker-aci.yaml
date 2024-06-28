@@ -1,0 +1,78 @@
+# Docker
+# Build a Docker image
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+
+trigger:
+- main
+- docker
+
+resources:
+- repo: self
+
+# IDK THIS TAKES PRECEEDENCES OVER THE ONES SPECIFIED INSIDE SCRIPT
+variables:
+  tag: '$(Build.BuildId)'
+  dockerfile: nginx.Dockerfile
+  #CN_NAME: onemore69
+  RG: stage-env-rg
+  REGION: centralindia
+ # IMAGE: mcr.microsoft.com/azuredocs/aci-helloworld
+  IMAGE: oj09/azure-pipeline
+
+stages:
+############################################
+- template: on-prem_deployment.yaml # Reference your template file here
+############################################
+
+- stage: Build4
+  displayName: Build image
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+    - task: Bash@3
+      displayName: "build image"
+      inputs:
+        targetType: 'inline'
+        script: 'docker build -f $dockerfile -t $IMAGE:$tag .'
+        workingDirectory: 'web'
+      env:
+        tag: $(tag)
+        dockerfile: $(dockerfile)
+        IMAGE: $(IMAGE)
+    - task: Docker@2
+      displayName: "Publish Image"
+      inputs:
+      # =========== Make sure to change Service Connection ==============
+        containerRegistry: 'oj09-dockerhub'
+        repository: '$(IMAGE)'
+        command: 'push'
+
+
+- stage: Deploy
+  displayName: Deploy Container
+  jobs:
+  - job: Test
+    pool:
+        vmImage: ubuntu-latest
+    steps:
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: 'Azure Pass - Sponsorship (91fe4193-95fd-44eb-aa50-066ae59bbc45)'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az group create --name $RG --location $REGION
+          
+          #az container create --resource-group $RG --name $CN_NAME --image $IMAGE --ports 80 --dns-name-label $CN_NAME --location $REGION
+          az container create --resource-group $RG --name $CNNAME-$num --image $IMAGE:$num --ports 80 --dns-name-label $CNNAME-$num --location $REGION
+          
+          az container show --resource-group $RG --name $CNNAME-$num --query "{FQDN:ipAddress.fqdn,ProvisioningState:provisioningState}" --out table
+      env:
+          CNNAME: mangu
+          RG: $(RG)
+          REGION: $(REGION)
+          IMAGE: $(IMAGE)
+          num: $(Build.BuildId)
