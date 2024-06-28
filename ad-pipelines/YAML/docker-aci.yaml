@@ -5,7 +5,7 @@
 ###################################################################
 #            PRE-REQ                      
 #        1. CREATE FOLDER WEB => PUT CONTENTS INSIDE THAT
-#        2. DOCKERFILE HERE ==> 
+#        2. DOCKERFILE HERE ==> docker/nginx.Dockerfile
 
 trigger:
 - main
