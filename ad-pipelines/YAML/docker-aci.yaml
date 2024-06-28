@@ -2,6 +2,11 @@
 # Build a Docker image
 # https://docs.microsoft.com/azure/devops/pipelines/languages/docker
 
+###################################################################
+#            PRE-REQ                      
+#        1. CREATE FOLDER WEB => PUT CONTENTS INSIDE THAT
+#        2. DOCKERFILE HERE ==> 
+
 trigger:
 - main
 - docker
