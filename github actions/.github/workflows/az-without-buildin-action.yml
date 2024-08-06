@@ -1,0 +1,46 @@
+##############################################################################################
+# GITHUB ACTIONS 
+###############################################################################################
+
+# WHEN TO RUN PIPELINE
+  # push:
+  #   branches:
+  #     - main
+  #     - 'releases/**'
+on:
+  workflow_dispatch: {}
+  pull_request:
+    branches:
+      - main
+
+env:
+  DAY_OF_WEEK: Tuesday
+  Name: AJ
+
+# This Works !!!!!!!!!!!!!!!!
+jobs:
+  azure:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login
+        run: az login --service-principal -u ${{ secrets.ID }} -p ${{ secrets.PASSWD }} --tenant ${{ secrets.TENANT }}
+        
+      - name: List RG
+        run: az group list
+
+  first-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: First
+        run: |
+          echo "Ok Now I'm using GitHub Actions"
+          echo "This is Repo level Var => $REPO_VAR"
+        
+  second-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Second
+        run: |
+          echo "Ok Now I'm using GitHub Actions"
+          echo "On $DAY_OF_WEEK"
+          echo "BTW This is $Name"
