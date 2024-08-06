@@ -22,14 +22,15 @@ jobs:
     steps:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      
-      - name: Build
+
+      - name: Build and Push
         uses: docker/build-push-action@v6
         with:
-          load: true
-          tags: myimage:latest
-          working-directory: web-page
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/myimage:latest
+          context: web-page # Specifies the build context directory
+          file: web-page/Dockerfile  # Path to the Dockerfile within the build context
       
       - name: Inspect
         run: |
-          docker image inspect myimage:latest
+          docker image inspect ${{ secrets.DOCKERHUB_USERNAME }}/myimage:latest
