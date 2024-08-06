@@ -20,8 +20,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: login  # Ensures that 'login' job completes before 'docker' job starts
     steps:
-      - name: Docker build
-        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/repository_name:$(date +%s) .
+      - uses: actions/checkout@v4
+      
+      - name: Build the Docker image
+        run: docker build . --file ../docker/nginx.Dockerfile --tag my-image-name:$(date +%s)
         working-directory: web-page
         
       - name: Docker Push
