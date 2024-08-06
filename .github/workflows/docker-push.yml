@@ -28,9 +28,9 @@ jobs:
         with:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/myimage:latest
-          context: web-page # Specifies the build context directory
-          file: web-page/Dockerfile  # Path to the Dockerfile within the build context
-      
+          context: web-page  # Directory containing Dockerfile and build context
+          file: web-page/Dockerfile  # Path to Dockerfile within the context
+
       - name: Inspect
         run: |
           docker image inspect ${{ secrets.DOCKERHUB_USERNAME }}/myimage:latest
