@@ -1,3 +1,12 @@
+'''
+python -m venv name
+.\name\Scripts\activate   (windows)
+source name/bin/activate  (linux)
+
+pip install azure.keyvault.secrets azure.identity
+
+'''
+
 import os
 from azure.keyvault.secrets import SecretClient
 from azure.identity import DefaultAzureCredential
