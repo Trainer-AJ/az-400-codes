@@ -1,0 +1,64 @@
+name: 2-deploy
+
+trigger:
+- features/arm-deployment
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+# Can use var group / template  here for cross pipeline comm
+- name : RG
+  value: pipeline-classic
+
+- name: NAME
+  value: classic-pipeline-876
+
+- name: REGION
+  value: centralindia
+
+resources:
+    
+  pipelines:
+  - pipeline: app-build # Name of the pipeline resource (given in yaml)
+    source: az-400-codes.git # The name of the pipeline referenced by this pipeline resource. (as visible in ADO)
+    project: GO # Required only if the source pipeline is in another project
+    branch: features/arm-deployment
+    trigger: true
+
+############### Download Artifact from other pipeline to this pipeline ###########################
+steps:
+- task: DownloadPipelineArtifact@2
+  inputs:
+    buildType: 'specific'
+    project: '829c7f72-4144-4cda-81a6-483f7b7efaa7'
+    definition: '4'
+    specificBuildWithTriggering: true
+    buildVersionToDownload: 'latest'
+    targetPath: '$(Pipeline.Workspace)/artifact'
+
+# BOth having repo root in them 
+# $(Pipeline.Workspace) = pipeline workspace => /home/vsts/work/1
+
+- bash: |
+     echo 'pipeline workspace => $(Pipeline.Workspace)'
+     ls -ltr $(Pipeline.Workspace)/artifact/drop
+     ls -ltr $(System.DefaultWorkingDirectory)
+     echo now root
+     ls -ltr $(pwd)
+#########################################   
+# bekar 
+# only zip reach no unzip no port 
+- task: AzureRmWebAppDeployment@4
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'Subscription-1(a43a9c48-19cb-4772-a3b8-79884e338743)'
+    appType: 'webAppLinux'
+    WebAppName: '$(NAME)'
+    packageForLinux: '$(Pipeline.Workspace)/artifact/drop'
+    RuntimeStack: 'PYTHON|3.11'
+  env: 
+    RG: $(RG)
+    REGION: $(REGION)
+    NAME: $(NAME)
+##################################################
