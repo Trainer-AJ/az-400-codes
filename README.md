@@ -5,5 +5,10 @@
 [ For example, if you have a Flask app whose main module is hello.py and the Flask app object in that file is named myapp, then the command is as follows- ](https://learn.microsoft.com/en-us/azure/app-service/configure-language-python)
 
 `gunicorn --bind=0.0.0.0 --timeout 600 hello:myapp`
+- CLI (Tested) -
+```sh
+az webapp create -g MyResourceGroup -p MyPlan -n MyUniqueAppName --runtime "PYTHON:3.12"
+az webapp list-runtimes
+```
 
 
