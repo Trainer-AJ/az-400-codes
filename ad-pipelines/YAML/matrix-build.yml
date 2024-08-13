@@ -1,0 +1,132 @@
+##################
+# Right now it runs all OS build
+# Matrix means just like maths 
+############################
+
+trigger: none
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  buildDir: 'build'
+
+jobs:
+- job: build
+  displayName: 'Build Go application'
+  strategy:
+    matrix:
+      linux:
+        OS: 'linux'
+        GOOS: 'linux'
+        GOARCH: 'amd64'
+        extension: ''
+        image: 'ubuntu-latest'
+      darwin:
+        OS: 'macOS'
+        GOOS: 'darwin'
+        GOARCH: 'amd64'
+        extension: ''
+        image: 'macos-latest'
+      windows:
+        OS: 'windows'
+        GOOS: 'windows'
+        GOARCH: 'amd64'
+        extension: '.exe'
+        image: 'windows-latest'
+
+  # pool:
+  #   vmImage: $(matrix.image)
+  #   vmImage: Windows-latest
+
+  steps:
+  - task: GoTool@0
+    inputs:
+      version: '1.10'
+
+  - script: |
+        mkdir -p $(buildDir)
+        go build -o $(buildDir)/myapp-$(GOOS)$(extension)
+    displayName: 'Build Go application for $(OS)'
+
+  - task: ArchiveFiles@2
+    inputs:
+      rootFolderOrFile: '$(System.DefaultWorkingDirectory)/$(buildDir)'
+      includeRootFolder: true
+      archiveType: 'zip'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+      replaceExistingArchive: true
+  - task: PublishBuildArtifacts@1
+    inputs:
+    # PathtoPublish: $(buildDir)
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+      ArtifactName: 'drop'
+      publishLocation: 'Container'
+#################################################
+# trigger:
+# - main
+
+# jobs:
+# - job: build_linux
+#   displayName: 'Build Go application for Linux'
+#   pool:
+#     vmImage: 'ubuntu-latest'
+#   steps:
+#   - task: UseGo@0
+#     inputs:
+#       version: '1.20' # Specify the Go version you need
+
+#   - script: |
+#       mkdir -p build
+#       GOOS=linux GOARCH=amd64 go build -o build/myapp-linux
+#     displayName: 'Build Go application for Linux'
+
+#   - task: PublishBuildArtifacts@1
+#     inputs:
+#       PathtoPublish: 'build'
+#       ArtifactName: 'drop'
+#       publishLocation: 'Container'
+
+# - job: build_darwin
+#   displayName: 'Build Go application for macOS'
+#   pool:
+#     vmImage: 'macos-latest'
+#   steps:
+#   - task: UseGo@0
+#     inputs:
+#       version: '1.20' # Specify the Go version you need
+
+#   - script: |
+#       mkdir -p build
+#       GOOS=darwin GOARCH=amd64 go build -o build/myapp-macos
+#     displayName: 'Build Go application for macOS'
+
+#   - task: PublishBuildArtifacts@1
+#     inputs:
+#       PathtoPublish: 'build'
+#       ArtifactName: 'drop'
+#       publishLocation: 'Container'
+
+# - job: build_windows
+#   displayName: 'Build Go application for Windows'
+#   pool:
+#     vmImage: 'windows-latest'
+#   steps:
+#   - task: UseGo@0
+#     inputs:
+#       version: '1.20' # Specify the Go version you need
+
+#   - script: |
+#       mkdir -p build
+#       GOOS=windows GOARCH=amd64 go build -o build/myapp-windows.exe
+#     displayName: 'Build Go application for Windows'
+
+#   - task: PublishBuildArtifacts@1
+#     inputs:
+#       PathtoPublish: 'build'
+#       ArtifactName: 'drop'
+#       publishLocation: 'Container'
+
+# /*
+
+# */
