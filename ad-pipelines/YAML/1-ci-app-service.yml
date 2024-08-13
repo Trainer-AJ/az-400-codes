@@ -1,0 +1,57 @@
+# az webapp create -g MyResourceGroup -p MyPlan -n MyUniqueAppName --runtime "PYTHON:3.12"
+# az webapp list-runtimes
+# 
+name: app-build
+
+trigger: none
+#- features/arm-deployment
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+- name : RG
+  value: pipeline-classic
+
+- name: NAME
+  value: classic-pipeline-876
+
+- name: REGION
+  value: centralindia
+
+steps:
+- task: ArchiveFiles@2
+  displayName: 'Archive Python'
+  inputs:
+    rootFolderOrFile: 'calculator App - Python'
+    # make sure NOT includeRootFolder - Prepend root folder name to archive paths
+#     boolean. Default value: true.
+    includeRootFolder: false 
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    replaceExistingArchive: true
+    
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: drop'
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+
+- task: AzureCLI@2
+  displayName: 'Preapre-Infra'
+  inputs:
+    azureSubscription: 'Subscription-1(a43a9c48-19cb-4772-a3b8-79884e338743)'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az group create -n $RG -l $REGION
+      az appservice plan create -g $RG -n MyPlan --is-linux --number-of-workers 4 --sku s1 -l $REGION 
+      az webapp create -g $RG -p MyPlan -n $NAME --runtime "PYTHON:3.12"
+  env: 
+    RG: $(RG)
+    REGION: $(REGION)
+    NAME: $(NAME)
+
+# - download: current
+#   artifact: WebApp
+  
+
