@@ -1,0 +1,46 @@
+# Go
+# Build your Go project.
+# Add steps that test, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/go
+
+#################
+# code - 
+##################
+
+trigger: none 
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: GoTool@0
+  inputs:
+    version: '1.10'
+
+- task: Go@0
+  inputs:
+    command: 'get'
+    arguments: '-d'
+
+- task: Go@0
+  inputs:
+    command: 'test'
+    arguments: '-cover'
+
+- task: Go@0
+  inputs:
+    command: 'build'
+    arguments: '-o webapp main.go'
+
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
+    includeRootFolder: true
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    replaceExistingArchive: true
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
