@@ -3,6 +3,8 @@
 ## CLI 
 > All Codes tested 
 ```sh
+az group list -o tsv --query '[?!(starts_with(name, `Visual`))].name' | xargs -otl az group delete --no-wait --yes -n
+
 az group list -o tsv --query '[?!(starts_with(name, `Visual`))].name'
 
 az group list -o tsv --query "[?starts_with(name, 'Visual') == \`false\`].name"
