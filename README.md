@@ -1,5 +1,10 @@
 [Types of tests](python/test)
 
+```sh
+# Bash script
+ID=
+az ad sp create-for-rbac --name AzureDevOpsPipeline --role contributor --scopes /subscriptions/$ID
+```
 ## CLI 
 > All Codes tested 
 ```sh
