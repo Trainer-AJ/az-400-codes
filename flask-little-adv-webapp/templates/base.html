@@ -1,0 +1,15 @@
+<html>
+    {# creating a fill in the blank for title#}
+    {#This will create child titles like - [thier content] - Home Page #}
+    <head>
+        <title> {% block title %}  {%endblock%} - Home Page</title>
+    </head>
+
+    <body>
+        <h1> This is from base Template !! </h1>
+        {% block body %} {% endblock%}
+        <a href="{{link}}"> Click to visit child template - Says base template </a>
+        <h1></h1>
+        <a href="{{ url_for('hello')}}"> Go back to Home Page</a>
+    </body>
+</html>

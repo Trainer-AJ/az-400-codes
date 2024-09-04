@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1> Hello {{name}} 😊 </h1>
+    <!-- <h2>TOtal Letters in your name: {{len}}</h2> -->
+    <h2> Total letters using {variable | filter}: {{alphabets[len]}}</h2>
+    <h2> There is lists from python :</h2>
+    <p> {{alphabets}}</p>
+    <h2> There is key-value from python :</h2>
+    <p> {{key_value}}</p>
+    <h3> here is a specific key-value name : {{key_value['start-2-end']}}</h3>
+    <h1></h1>
+    <h1> Python if then statements </h1>
+    <ul>
+        {% for variable in alphabets: %}
+        <li> {{ variable }} </li>
+        {% endfor %}
+    </ul>
+    
+</body>
+</html>
