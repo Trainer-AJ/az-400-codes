@@ -1,5 +1,7 @@
 [Types of tests](python/test)
 
+`YAML PIPELINE= $(system.defaultworkingdirectory) == Root of your Azure Repo`
+
 ```sh
 # Bash script
 ID=
