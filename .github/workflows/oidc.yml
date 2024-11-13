@@ -1,3 +1,9 @@
+########################
+# create app registration ==> secrets => federated creds => select GH action
+# copy url coponents => trainer-aj Instead of Trainer-AJ gives error so 
+# give permissions on subscription
+
+
 name: Run Azure Login with OIDC
 on:
   workflow_dispatch:
