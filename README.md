@@ -1,5 +1,8 @@
 [Types of tests](python/test)
 
+## Security
+- Code scanning with GitHub Actions is not available for this repository.
+GitHub Actions is disabled on this repository because it is a fork. To use code scanning please enable it, or submit code scanning results externally using the API.
 ## Monitor
 [App Insights Python](https://learn.microsoft.com/en-us/azure/azure-monitor/app/opentelemetry-enable?tabs=python)
 
