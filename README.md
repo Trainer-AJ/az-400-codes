@@ -1,5 +1,8 @@
 [Types of tests](python/test)
 
+## Monitor
+[App Insights Python](https://learn.microsoft.com/en-us/azure/azure-monitor/app/opentelemetry-enable?tabs=python)
+
 `YAML PIPELINE= $(system.defaultworkingdirectory) == Root of your Azure Repo`
 
 ```sh
