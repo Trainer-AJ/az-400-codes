@@ -1,0 +1,82 @@
+################
+# OK TESTED 
+##############
+
+trigger:
+- features/arm-deployment
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+- template: ad-pipelines/Calculator-YAML/0-vars-template.yml
+
+# $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+# If you have a pipeline that produces artifacts, 
+# you can consume the artifacts by defining a pipelines resource.
+#  Only Azure Pipelines can use the pipelines resource. 
+#  You can set triggers for your continuous deployment (CD) workflows on a pipeline resource.
+
+resources:
+    
+  pipelines:
+  - pipeline: app-build # Name of the pipeline resource.
+    source: basic (17) # The name of the pipeline referenced by this pipeline resource. (as visible in ADO)
+    project: basic # Required only if the source pipeline is in another project
+    branch: main
+    trigger: true
+
+
+steps:
+######## you also need to change it ################
+- task: DownloadPipelineArtifact@2
+  inputs:
+    buildType: 'specific'
+    project: 'eed2d9ce-4ff6-4ce6-8a1c-1fe2a2ee379d'
+    definition: '17'
+    specificBuildWithTriggering: true
+    buildVersionToDownload: 'latest'
+    targetPath: '$(Pipeline.Workspace)/artifact'
+# **********************************************************
+
+# BOth having repo root in them 
+# $(Pipeline.Workspace) = pipeline workspace => /home/vsts/work/1
+
+- bash: |
+      unzip *.zip 
+      mkdir -p $(Pipeline.Workspace)/build
+      cp -r ./* $(Pipeline.Workspace)/build
+  workingDirectory: $(Pipeline.Workspace)/artifact/drop
+
+- bash: |
+     rm -rf $(Pipeline.Workspace)/build/*.zip
+     ls -ltr $(Pipeline.Workspace)/build
+
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: '${{ variables.azureSubscription }}'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: 'az webapp up --runtime PYTHON:3.11 --sku B1'
+    workingDirectory: '$(Pipeline.Workspace)/build'
+
+# - task: AzureCLI@2
+#   displayName: 'Preapre-Infra'
+#   inputs:
+#     azureSubscription: $(azureSubscription-Service-Connection)
+#     scriptType: 'bash'
+#     scriptLocation: 'inlineScript'
+#     inlineScript: |
+#       az group create -n $RG -l $REGION
+#       az appservice plan create -g $RG -n MyPlan --is-linux --number-of-workers 4 --sku s1 -l $REGION 
+#       az webapp create -g $RG -p MyPlan -n $NAME --runtime "PYTHON:3.11"
+#   env: 
+#     RG: $(RG)
+#     REGION: $(REGION)
+#     NAME: $(NAME) 
+- script: |
+    echo ' this is var 1 ${{ variables.azureSubscription }}'
+    echo ${{ variables.REGION }}
+  displayName: 'Run a multi-line script'
+
+

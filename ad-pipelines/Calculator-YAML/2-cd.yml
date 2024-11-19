@@ -1,0 +1,87 @@
+### May show time out error but website succesful 
+
+trigger:
+- features/arm-deployment
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+- template: ad-pipelines/Calculator-YAML/0-vars-template.yml
+
+# $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+# If you have a pipeline that produces artifacts, 
+# you can consume the artifacts by defining a pipelines resource.
+#  Only Azure Pipelines can use the pipelines resource. 
+#  You can set triggers for your continuous deployment (CD) workflows on a pipeline resource.
+
+resources:
+    
+  pipelines:
+  - pipeline: app-build # Name of the pipeline resource.
+    source: basic (17) # The name of the pipeline referenced by this pipeline resource. (as visible in ADO)
+    project: basic # Required only if the source pipeline is in another project
+    branch: main
+    trigger: true
+
+
+steps:
+######## you also need to chnage it ################
+- task: DownloadPipelineArtifact@2
+  inputs:
+    buildType: 'specific'
+    project: 'eed2d9ce-4ff6-4ce6-8a1c-1fe2a2ee379d'
+    definition: '17'
+    specificBuildWithTriggering: true
+    buildVersionToDownload: 'latest'
+    targetPath: '$(Pipeline.Workspace)/artifact'
+# **********************************************************
+
+# BOth having repo root in them 
+# $(Pipeline.Workspace) = pipeline workspace => /home/vsts/work/1
+
+- bash: |
+      unzip *.zip 
+      mkdir -p $(Pipeline.Workspace)/build
+      cp -r ./* $(Pipeline.Workspace)/build
+  workingDirectory: $(Pipeline.Workspace)/artifact/drop
+
+- bash: |
+     rm -rf $(Pipeline.Workspace)/build/*.zip
+     ls -ltr $(Pipeline.Workspace)/build
+- task: AzureCLI@2
+  displayName: App-Setting
+  inputs:
+    azureSubscription: ${{ variables.azureSubscription }}
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az webapp config appsettings set \
+          --resource-group $RG \
+          --name $NAME \
+          --settings SCM_DO_BUILD_DURING_DEPLOYMENT=true
+    workingDirectory: '$(Pipeline.Workspace)/artifact'
+  env: 
+    RG: $(RG)
+    REGION: $(REGION)
+    NAME: $(NAME)
+
+# for  az webapp deploy
+# --src-path
+# Path of the artifact to be deployed. Ex: "myapp.zip"
+# --target-path
+# Absolute path that the artifact should be deployed to. Defaults to "home/site/wwwroot/
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: ${{ variables.azureSubscription }}
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az webapp deploy \
+          --name $NAME \
+          --resource-group $RG \
+          --src-path $(Pipeline.Workspace)/artifact/drop/*.zip
+  env: 
+    RG: $(RG)
+    REGION: $(REGION)
+    NAME: $(NAME)

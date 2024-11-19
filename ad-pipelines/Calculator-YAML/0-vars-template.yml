@@ -1,0 +1,18 @@
+# ##
+# Synatx:
+# # File: vars.yml
+# variables:
+#   favoriteVeggie: 'brussels sprouts'
+
+variables:
+- name : RG
+  value: cicd
+
+- name: NAME
+  value: test656756
+
+- name: REGION
+  value: centralindia
+
+- name: azureSubscription
+  value: 'Azure Pass - Sponsorship(2d4735f4-61ae-40d4-b1b1-5240916b7d0c)'

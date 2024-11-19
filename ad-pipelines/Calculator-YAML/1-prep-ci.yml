@@ -9,15 +9,20 @@ trigger: none
 pool:
   vmImage: ubuntu-latest
 
-variables:
-- name : RG
-  value: cicd
+# variables:
+# - template: ad-pipelines/Calculator-YAML/0-vars-template.yml
 
-- name: NAME
-  value: classic-pipeline-876
+# - name : RG
+#   value: cicd
 
-- name: REGION
-  value: centralindia
+# - name: NAME
+#   value: test656756
+
+# - name: REGION
+#   value: centralindia
+
+# - name: azureSubscription-Service-Connection
+#   value: Azure Pass - Sponsorship(2d4735f4-61ae-40d4-b1b1-5240916b7d0c)
 
 steps:
 - task: ArchiveFiles@2
@@ -36,20 +41,6 @@ steps:
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
 
-- task: AzureCLI@2
-  displayName: 'Preapre-Infra'
-  inputs:
-    azureSubscription: 'Subscription-1(a43a9c48-19cb-4772-a3b8-79884e338743)'
-    scriptType: 'bash'
-    scriptLocation: 'inlineScript'
-    inlineScript: |
-      az group create -n $RG -l $REGION
-      az appservice plan create -g $RG -n MyPlan --is-linux --number-of-workers 4 --sku s1 -l $REGION 
-      az webapp create -g $RG -p MyPlan -n $NAME --runtime "PYTHON:3.11"
-  env: 
-    RG: $(RG)
-    REGION: $(REGION)
-    NAME: $(NAME)
 
 # - download: current
 #   artifact: WebApp
