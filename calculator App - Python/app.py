@@ -1,5 +1,5 @@
 # source : https://learn.microsoft.com/en-us/azure/app-service/quickstart-python?tabs=flask
-# flask --app calculator_app run
+# flask --app calculator_app run (if file name calculator_app.py) else only flask run
 # flask run cmd: https://flask.palletsprojects.com/en/stable/quickstart/
 
 from flask import Flask, request, render_template
