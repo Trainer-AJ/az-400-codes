@@ -1,0 +1,26 @@
+name: create-app
+
+trigger: none
+# - features/arm-deployment
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+- template: 0-vars-template.yml
+
+steps: 
+- task: AzureCLI@2
+  displayName: 'Preapre-Infra'
+  inputs:
+    azureSubscription: 'Azure Pass - Sponsorship(2d4735f4-61ae-40d4-b1b1-5240916b7d0c)'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az group create -n $RG -l $REGION
+      az appservice plan create -g $RG -n MyPlan --is-linux --number-of-workers 4 --sku s1 -l $REGION 
+      az webapp create -g $RG -p MyPlan -n $NAME --runtime "PYTHON:3.11"
+  env: 
+    RG: ${{ variables.RG }}
+    REGION: ${{ variables.REGION }}
+    NAME: ${{ variables.NAME }}

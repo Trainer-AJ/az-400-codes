@@ -3,7 +3,14 @@
 # 
 name: app-build
 
-trigger: none
+trigger:
+   branches:
+     include:
+     - main
+   paths:
+     include:
+     - calculator*App/*
+
 #- features/arm-deployment
 
 pool:
@@ -28,7 +35,7 @@ steps:
 - task: ArchiveFiles@2
   displayName: 'Archive Python'
   inputs:
-    rootFolderOrFile: 'calculator App - Python'
+    rootFolderOrFile: 'calculatorApp'
     # make sure NOT includeRootFolder - Prepend root folder name to archive paths
 #     boolean. Default value: true.
     includeRootFolder: false 

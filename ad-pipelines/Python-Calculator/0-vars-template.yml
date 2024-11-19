@@ -9,7 +9,7 @@ variables:
   value: cicd
 
 - name: NAME
-  value: test656756
+  value: midnyt89334
 
 - name: REGION
   value: centralindia

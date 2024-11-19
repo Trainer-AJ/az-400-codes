@@ -1,13 +1,12 @@
 ### May show time out error but website succesful 
 
-trigger:
-- features/arm-deployment
+trigger: none
 
 pool:
   vmImage: ubuntu-latest
 
 variables:
-- template: ad-pipelines/Calculator-YAML/0-vars-template.yml
+- template: 0-vars-template.yml
 
 # $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
 # If you have a pipeline that produces artifacts, 
@@ -19,8 +18,8 @@ resources:
     
   pipelines:
   - pipeline: app-build # Name of the pipeline resource.
-    source: basic (17) # The name of the pipeline referenced by this pipeline resource. (as visible in ADO)
-    project: basic # Required only if the source pipeline is in another project
+    source: test # The name of the pipeline referenced by this pipeline resource. (as visible in ADO)
+    project: test # Required only if the source pipeline is in another project
     branch: main
     trigger: true
 
@@ -30,8 +29,8 @@ steps:
 - task: DownloadPipelineArtifact@2
   inputs:
     buildType: 'specific'
-    project: 'eed2d9ce-4ff6-4ce6-8a1c-1fe2a2ee379d'
-    definition: '17'
+    project: '1aaead7b-9db5-46ed-bb03-9111ee33087c'
+    definition: '21'
     specificBuildWithTriggering: true
     buildVersionToDownload: 'latest'
     targetPath: '$(Pipeline.Workspace)/artifact'
