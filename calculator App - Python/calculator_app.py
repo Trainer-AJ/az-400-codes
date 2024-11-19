@@ -1,3 +1,7 @@
+# source : https://learn.microsoft.com/en-us/azure/app-service/quickstart-python?tabs=flask
+# flask --app calculator_app run
+# flask run cmd: https://flask.palletsprojects.com/en/stable/quickstart/
+
 from flask import Flask, request, render_template
 
 app = Flask(__name__)
@@ -25,5 +29,8 @@ def calculate():
             return 'Error: Cannot divide by zero!'
     return render_template('result.html', result=result)
 
+# if __name__ == '__main__':
+#     app.run(debug=True)
+
 if __name__ == '__main__':
-    app.run(debug=True)
+   app.run()
