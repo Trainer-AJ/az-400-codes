@@ -51,6 +51,8 @@ stages:
       displayName: "Publish Image"
       inputs:
       # =========== Make sure to change Service Connection ==============
+      # projects ==> service connection => Docker Registry service connection (select ACR / dockerhub)
+        containerRegistry: 'acr' # docker registry service connection
         containerRegistry: 'oj09-dockerhub'
         repository: '$(IMAGE)'
         command: 'push'
