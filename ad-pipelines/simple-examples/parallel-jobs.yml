@@ -1,0 +1,47 @@
+#######
+# SHow That Multiple Jobs runs at same time
+
+trigger:
+   branches:
+     include:
+     - main
+   paths:
+     include:
+     - web-page/*
+
+pool:
+  vmImage: ubuntu-latest
+
+jobs:
+- job: one
+  steps:
+  - script: echo Hello, world!
+    displayName: 'Run a one-line script'
+
+  - script: |
+      echo Add other tasks to build, test, and deploy your project.
+      echo See https://aka.ms/yaml
+      sleep 10 
+    displayName: 'Run a multi-line script'
+
+- job: two
+  steps:
+  - script: echo Hello, world!
+    displayName: 'Run a one-line script'
+
+  - script: |
+      echo Add other tasks to build, test, and deploy your project.
+      echo See https://aka.ms/yaml
+      sleep 15
+    displayName: 'Run a multi-line script'
+
+- job: three
+  steps:
+  - script: echo Hello, world!
+    displayName: 'Run a one-line script'
+
+  - script: |
+      echo Add other tasks to build, test, and deploy your project.
+      echo See https://aka.ms/yaml
+      sleep 25
+    displayName: 'Run a multi-line script'
