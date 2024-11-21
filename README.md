@@ -2,7 +2,19 @@
 
 ## Security
 - Code scanning with GitHub Actions is not available for this repository.
-GitHub Actions is disabled on this repository because it is a fork. To use code scanning please enable it, or submit code scanning results externally using the API.
+`GitHub Actions is disabled on this repository because it is a fork. To use code scanning please enable it, or submit code scanning results externally using the API.`
+
+- [Dependabot Alerts - Free for Github Public Repo](https://docs.github.com/en/code-security/dependabot/dependabot-alerts/about-dependabot-alerts)
+
+**GitHub Advanced Security**: 
+Public repo and private repo with adv security license have: 
+- Code scanning			
+- CodeQL CLI			
+- Secret scanning			
+- Custom auto-triage rules			
+- Dependency review			
+[GH docs](https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security)
+
 ## Monitor
 [App Insights Python](https://learn.microsoft.com/en-us/azure/azure-monitor/app/opentelemetry-enable?tabs=python)
 
