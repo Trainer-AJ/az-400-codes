@@ -30,23 +30,55 @@ pool:
 
 # - name: azureSubscription-Service-Connection
 #   value: Azure Pass - Sponsorship(2d4735f4-61ae-40d4-b1b1-5240916b7d0c)
+jobs:
+- job: Test
+  steps:
+# This uses locally installed Python 
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.x'
+      disableDownloadFromRegistry: true
+      addToPath: true
+      architecture: 'x64'
 
-steps:
-- task: ArchiveFiles@2
-  displayName: 'Archive Python'
-  inputs:
-    rootFolderOrFile: 'calculatorApp'
-    # make sure NOT includeRootFolder - Prepend root folder name to archive paths
-#     boolean. Default value: true.
-    includeRootFolder: false 
-    archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-    replaceExistingArchive: true
-    
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Artifact: drop'
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+  # Step 2: Install dependencies
+  - script: |
+      python -m pip install --upgrade pip
+      pip install -r requirements.txt
+    displayName: 'Install dependencies'
+    workingDirectory: calculatorApp
+
+  # Step 3: Run Unit Tests
+  - script: |
+      python -m unittest discover -s . -p "calculator_test.py"
+    displayName: 'Run unit tests'
+    workingDirectory: calculatorApp
+
+  # Step 4: Publish Test Results (optional)
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFiles: '**/TEST-*.xml'
+      testRunTitle: 'Calculator Tests'
+      mergeTestResults: true
+# ******************************************************************
+- job: Build
+  dependsOn: Test
+  steps:
+  - task: ArchiveFiles@2
+    displayName: 'Archive Python'
+    inputs:
+      rootFolderOrFile: 'calculatorApp'
+      # make sure NOT includeRootFolder - Prepend root folder name to archive paths
+  #     boolean. Default value: true.
+      includeRootFolder: false 
+      archiveType: 'zip'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+      replaceExistingArchive: true
+      
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact: drop'
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
 
 
 # - download: current
