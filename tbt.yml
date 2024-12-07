@@ -1,0 +1,19 @@
+# when to run pipeline
+trigger:
+- main
+
+# where to run pipeline
+pool:
+  vmImage: ubuntu-latest
+
+# Jobs / Steps = what to do 
+steps:
+- script: echo Hello, world!
+  displayName: 'Run a one-line script'
+
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: 'Ignite-lod49961704(3bf49093-f259-4e85-b378-2317d287dbe1)'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: 'az group list'
