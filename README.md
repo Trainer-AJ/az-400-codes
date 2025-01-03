@@ -19,6 +19,10 @@ Public repo and private repo with adv security license have:
 [App Insights Python](https://learn.microsoft.com/en-us/azure/azure-monitor/app/opentelemetry-enable?tabs=python)
 
 `YAML PIPELINE= $(system.defaultworkingdirectory) == Root of your Azure Repo`
+- **IF bash script error => \r**:
+```sh
+sed -i 's/\r$//' Codes/rg/linux-cred-check.sh
+```
 
 ```sh
 # Bash script
