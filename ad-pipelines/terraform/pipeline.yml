@@ -1,0 +1,43 @@
+
+trigger: none
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+# Download secrets from key vault
+- task: AzureKeyVault@2
+  inputs:
+    azureSubscription: 'Azure'
+    KeyVaultName: 'test897'
+    SecretsFilter: '*'
+    RunAsPreJob: true
+
+# Terraform plan 
+- task: Bash@3
+  displayName: Plan
+  inputs:
+    targetType: 'inline'
+    script: |
+      terraform init 
+      terraform plan -out "1.tfplan"
+    workingDirectory: 'Codes/rg'
+  env: 
+      ARM_CLIENT_ID: $(SP)
+      ARM_CLIENT_SECRET: $(SECRET)
+      ARM_TENANT_ID: $(TENANT)
+      ARM_SUBSCRIPTION_ID: $(SUB)
+
+# Terraform Apply
+- task: Bash@3
+  displayName: Apply
+  inputs:
+    targetType: 'inline'
+    script: |
+      terraform apply --auto-approve "1.tfplan"
+    workingDirectory: 'Codes/rg'
+  env: 
+      ARM_CLIENT_ID: $(SP)
+      ARM_CLIENT_SECRET: $(SECRET)
+      ARM_TENANT_ID: $(TENANT)
+      ARM_SUBSCRIPTION_ID: $(SUB)
