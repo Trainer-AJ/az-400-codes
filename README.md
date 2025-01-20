@@ -1,3 +1,4 @@
+**[Implementing DevOps](https://spacelift.io/blog/devops-implementation)**
 [Types of tests](python/test)
 
 ## Security
