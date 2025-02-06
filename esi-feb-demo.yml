@@ -1,0 +1,53 @@
+# WHEN TO RUN PIPELINE
+trigger:
+ branches:
+  include:
+    - main
+ paths:
+  include:
+   - calculatorApp
+
+# WHERE TO RUN 
+pool:
+  vmImage: ubuntu-latest
+
+# WHAT TO DO ?
+
+stages:
+  - stage: A
+    displayName: Prepare Code
+    jobs:
+    - job: A
+      displayName: Test Code
+      steps:
+        - task: Bash@3
+          displayName: Check Pre-Req
+          inputs:
+            targetType: 'inline'
+            script: |
+              echo "We are going to test"
+              find . -name *.py
+    - job: B   
+      displayName: Test Code
+      steps:
+        - task: PythonScript@0
+          displayName: Test Code
+          inputs:
+            scriptSource: 'filePath'
+            scriptPath: 'calculatorApp/calculator_test.py'
+
+  - stage: B
+    displayName: Deploy to Azure
+    jobs:
+    - job: A
+      steps:
+      - task: AzureCLI@2
+        displayName: Deploy to Azure
+        inputs:
+          azureSubscription: 'My-Visa-2-Azure'
+          scriptType: 'bash'
+          scriptLocation: 'inlineScript'
+          inlineScript: 'az webapp up -n PipelineApp93948974 --runtime "PYTHON:3.12"'
+          workingDirectory: 'calculatorApp'
+     
+
