@@ -11,6 +11,8 @@ steps:
     azureResourceManagerConnection: 'CS-SUBM-0413(58ab7092-9763-44c6-86ea-7c34d636f23e)'
     subscriptionId: '58ab7092-9763-44c6-86ea-7c34d636f23e'
     action: 'Create Or Update Resource Group'
+    resourceGroupName: 'pipeline-demo'
+    location: 'Central India'
     templateLocation: 'Linked artifact'
     csmFile: 'ARM/storage-account.json'
     csmParametersFile: 'ARM/parameters.json'
