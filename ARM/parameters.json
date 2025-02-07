@@ -17,7 +17,7 @@
       }
     },
     "containerPrefix": {
-      "value": "logs",
+      "value": "etst",
       "type": "string",
       "metadata": {
         "description": "Specifies the prefix of the blob container names."
