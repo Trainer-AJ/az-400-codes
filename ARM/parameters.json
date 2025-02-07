@@ -10,7 +10,7 @@
   },
   "parameters": {
     "storageAccountName": {
-      "value": "<provide-storage-account-name>",
+      "value": "ts97489743",
       "type": "string",
       "metadata": {
         "description": "Specifies the name of the Azure Storage account."
@@ -24,7 +24,7 @@
       }
     },
     "location": {
-      "value": "<provide-resource-group-location>",
+      "value": "eastus",
       "type": "string",
       "metadata": {
         "description": "Specifies the location in which the Azure Storage resources should be deployed."
