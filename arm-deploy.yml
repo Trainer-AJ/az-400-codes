@@ -1,4 +1,5 @@
-trigger: none
+trigger: 
+- 7febdemo
 
 pool:
   vmImage: ubuntu-latest
