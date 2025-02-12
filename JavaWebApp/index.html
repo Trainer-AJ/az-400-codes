@@ -1,0 +1,29 @@
+// src/MainServlet.java
+import javax.servlet.*;
+import javax.servlet.http.*;
+import java.io.*;
+
+public class MainServlet extends HttpServlet {
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/html");
+        PrintWriter out = response.getWriter();
+        
+        // Send the HTML content as response
+        out.println("<!DOCTYPE html>");
+        out.println("<html>");
+        out.println("<head>");
+        out.println("<title>Java Web App with Animation</title>");
+        out.println("<link rel='stylesheet' type='text/css' href='styles.css'>");
+        out.println("</head>");
+        out.println("<body>");
+        out.println("<div class='message'>");
+        out.println("<span class='text'>It's always you vs you </span>");
+        out.println("<span class='text'>so stop it and GO watch Netflix ... </span>");
+        out.println("<span class='text'>- AJ's broken humour </span>");
+        out.println("</div>");
+        out.println("<script src='script.js'></script>");
+        out.println("</body>");
+        out.println("</html>");
+    }
+}
