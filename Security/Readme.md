@@ -3,3 +3,6 @@
 - [list of supported secrets types](https://docs.github.com/en/code-security/secret-scanning/introduction/supported-secret-scanning-patterns#supported-secrets)
 - push this [file](./vunerable.py) to trigger vunerability
 - Enable every option under **SECURITY heading in your github repo**
+- Defender for DevOps Iac Scanning for Azure Repo & Github - [Ms Docs](https://learn.microsoft.com/en-us/azure/defender-for-cloud/iac-vulnerabilities)
+- he IaC scanning tools that are included with Microsoft Security DevOps are Template Analyzer (PSRule is included in Template Analyzer), Checkov and Terrascan.
+- [DevSecOps - ms docs](https://learn.microsoft.com/en-us/devops/operate/security-in-devops)
