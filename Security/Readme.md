@@ -1,0 +1,5 @@
+- [Code Scanning - need to enable ... can auto create PR based on AI](https://learn.microsoft.com/en-us/training/modules/configure-use-secret-scanning-github-repository/3-configure-secret-scanning)
+- You get Email only for secrets
+- [list of supported secrets types](https://docs.github.com/en/code-security/secret-scanning/introduction/supported-secret-scanning-patterns#supported-secrets)
+- push this [file](./vunerable.py) to trigger vunerability
+- Enable every option under **SECURITY heading in your github repo**
