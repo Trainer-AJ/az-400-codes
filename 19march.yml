@@ -1,0 +1,59 @@
+# comments
+
+# --------------- Variables -----------------------
+variables:
+- name: dir
+  value: "flask-little-adv-webapp"
+
+- name: region
+  value: centralindia
+
+# *********** Variabele group here
+- group: project-scoped-vars
+
+# ----------- When to Run ------------------------
+trigger:
+- main
+- azure-pipeline
+- branch_name
+# ------------------- Where to Run ------------------------------
+
+pool:
+  vmImage: ubuntu-latest
+
+# --------------- What to do --------------------------------
+jobs: 
+- job: one 
+  steps:
+  # item1
+  - script: echo Hello, world!
+    displayName: 'Run a one-line script'
+
+  # item2
+  - script: |
+          echo "This is predefined Build.BuildNumber variable => $(Build.BuildNumber)"
+          echo ""
+          echo "this predefined variable can be a docker image tag => $(Build.Reason)-$(Build.BuildId)"
+    displayName: 'Print Pre-Defined Variable'
+
+
+# -------------- JOB: 2 => Another independent collection of task -------------
+
+- job: two
+  steps:
+
+  - script: |
+          echo "This is pipeline variable => $(region)"
+          echo ""
+          echo -e "this predefined variable can be a docker image tag => $(Build.Reason)-$(Build.BuildId) \n"
+          echo "Via Variable Group: $(sub_id)"
+    displayName: 'Print Pipeline Variable'
+
+  - task: AzureCLI@2
+    displayName: Deploy to app service
+    inputs:
+      azureSubscription: $(service_connection_name)  # variable group
+      scriptType: 'bash'
+      scriptLocation: 'inlineScript'
+      inlineScript: 'az webapp up -n pipeline-$RANDOM --runtime "PYTHON:3.13"'
+      workingDirectory: $(dir)    # pipeline-var
