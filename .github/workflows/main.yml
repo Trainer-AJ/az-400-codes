@@ -36,16 +36,19 @@ jobs:
             # audience: # optional, default is api://AzureADTokenExchange
             # # The type of authentication. Supported values are SERVICE_PRINCIPAL, IDENTITY. Default value is SERVICE_PRINCIPAL
             # auth-type: # optional, default is SERVICE_PRINCIPAL
-          
+       - name: CLI
+         run: |
+             az group create -n gh-env-rg -l centralindia
+             az network vnet create --name gh-vnet-1 --resource-group gh-env-rg --address-prefix 10.0.0.0/16 --subnet-name subnet-1 --subnet-prefixes 10.0.0.0/24
 
-   azCli:
-       runs-on: ubuntu-latest
-       steps:
-       - name: Azure CLI Action
-         uses: Azure/cli@v2.1.0
-         with:
-                # Specify the script here
-                inlineScript: az network vnet create --name gh-vnet-1 --resource-group gh-env-rg --address-prefix 10.0.0.0/16 --subnet-name subnet-1 --subnet-prefixes 10.0.0.0/24
+   # azCli:
+   #     runs-on: ubuntu-latest
+   #     steps:
+   #     - name: Azure CLI Action
+   #       uses: Azure/cli@v2.1.0
+   #       with:
+   #              # Specify the script here
+   #              inlineScript: az network vnet create --name gh-vnet-1 --resource-group gh-env-rg --address-prefix 10.0.0.0/16 --subnet-name subnet-1 --subnet-prefixes 10.0.0.0/24
                 # Azure CLI version to be used to execute the script. If not provided, latest version is used
                 #azcliversion: # optional, default is agentazcliversion
           
