@@ -1,0 +1,31 @@
+# this is GIthub actions to help compare Azure DevOps YAML
+ 
+name: Comparing with Azure Pipeline
+ 
+#  trigger:
+#   - conflict
+on:
+# ALLOW TO RUN MANUALLY .... ELSE not possible
+  workflow_dispatch: {}
+ 
+  # RUN WHEN CHNAGE HAPPENS IN CONFLICT BRANCH
+  push:
+    branches:
+      - conflict 
+
+ 
+# # pool:
+#    vmImage: ubuntu-latest
+ 
+jobs:
+   first:
+     runs-on: ubuntu-latest
+ 
+     steps:
+     - name: One-line
+       run: echo Hello, World !!!
+ 
+     - name: Multi-Line
+       run: |
+         echo Add other tasks to build, test, and deploy your project.
+         echo This is AJ !!!
