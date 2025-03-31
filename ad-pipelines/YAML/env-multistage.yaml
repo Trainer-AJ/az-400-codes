@@ -82,6 +82,7 @@ stages:
 
 ##################################################
 #   Use Key vault to create Azure SQL server     #
+# Bash script MS DOCS: https://learn.microsoft.com/en-us/azure/azure-sql/database/scripts/create-and-configure-database-cli?view=azuresql
 ##################################################
       - task: AzureKeyVault@2
         inputs:
