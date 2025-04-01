@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Update apt repositories and install OpenJDK 17
+# added new line 
 sudo apt update -y
 sudo apt install openjdk-17-jre -y
 
