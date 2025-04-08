@@ -1,0 +1,75 @@
+trigger: none
+
+# pool:
+#  # name: Default
+#  # above is for self hosted agent
+
+#   vmImage: windows-2025 # this is MS hosted
+
+jobs: 
+- job: containerJob
+# step 1 get ubuntu vm from MS
+  pool:
+    vmImage: 'ubuntu-latest'
+# get python containers into above ubuntu vm
+  container: python:slim-bullseye
+
+  steps:
+  - script: python --version
+  - script: printenv
+
+- job: agentless
+# ------------- THIS IS AGENTLESS -------
+  pool: server
+  steps:
+  - task: ManualValidation@1
+    inputs:
+      notifyUsers: 'XLab-udH-100@xtremelabs.us'
+      approvers: 'XLab-udH-100@xtremelabs.us'
+  # Invoke REST API v1
+# Invoke a REST API as a part of your pipeline.
+  - task: InvokeRESTAPI@1
+    inputs:
+      connectionType: 'connectedServiceName'
+      serviceConnection: 'reqres bookshelf'
+      method: 'GET'
+      headers: 
+      urlSuffix: 'page=2'
+      
+      #successCriteria: # string. Optional. Use when waitForCompletion = false. Success criteria.
+
+- job: A
+  pool:
+    vmImage: ubuntu-latest
+  steps:
+  - script: echo "Hello, world!" > pipeline.txt
+    displayName: 'Run a one-line script'
+
+  - script: |
+      echo Add other tasks to build, test, and deploy your project.
+      echo See https://aka.ms/yaml
+    displayName: 'Run a multi-line script'
+
+- job: B
+  pool:
+    vmImage: windows-latest
+  steps:
+  - script: echo "Hello, world!" > pipeline.txt
+    displayName: 'Run a one-line script'
+
+  - script: |
+      echo Add other tasks to build, test, and deploy your project.
+      echo See https://aka.ms/yaml
+    displayName: 'Run a multi-line script'
+
+- job: C
+  pool:
+    vmImage: windows-2025
+  steps:
+  - script: echo "Hello, world!" > pipeline.txt
+    displayName: 'Run a one-line script'
+
+  - script: |
+      echo Add other tasks to build, test, and deploy your project.
+      echo See https://aka.ms/yaml
+    displayName: 'Run a multi-line script'
