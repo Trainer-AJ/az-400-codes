@@ -1,0 +1,53 @@
+
+trigger: none
+
+pool:
+  vmImage: ubuntu-latest
+
+
+jobs:
+- job: Deploy
+  steps:
+  - task: TerraformInstaller@1
+    inputs:
+      terraformVersion: 'latest'
+
+  - task: TerraformTaskV4@4
+    displayName: Start 
+    inputs:
+      provider: 'azurerm'
+      command: 'init'
+      workingDirectory: '$(System.DefaultWorkingDirectory)/terraform-Codes'
+      backendAzureRmUseEnvironmentVariablesForAuthentication: true
+      backendServiceArm: 'Azure Cloud'
+      backendAzureRmResourceGroupName: 'agent'
+      backendAzureRmStorageAccountName: 'demo09457894'
+      backendAzureRmContainerName: 'tftstate'
+      backendAzureRmKey: 'pipeline.tfstate'
+
+  - task: TerraformTaskV4@4
+    displayName: Deploy SQL DB
+    inputs:
+      provider: 'azurerm'
+      command: 'apply'
+      workingDirectory: '$(System.DefaultWorkingDirectory)/terraform-Codes'
+      environmentServiceNameAzureRM: 'Azure Cloud'
+
+- job: Configure
+# ##[error]The current operating system is not capable of running this task. That typically means the task was written for Windows only
+  pool:
+    #vmImage: windows-2025
+    name: MyOnPrem
+  steps:
+    - task: SqlAzureDacpacDeployment@1
+      displayName: Create Table 
+      inputs:
+        azureSubscription: 'Azure Cloud'
+        AuthenticationType: 'server'
+        ServerName: 'mssqlserver-oaq7m.database.windows.net'
+        DatabaseName: 'master'
+        SqlUsername: 'aj'
+        SqlPassword: 'nooPho4ae5ooyai2'
+        deployType: 'SqlTask'
+        SqlFile: 'dotnet-sql-app-code.sql'
+        IpDetectionMethod: 'AutoDetect'
