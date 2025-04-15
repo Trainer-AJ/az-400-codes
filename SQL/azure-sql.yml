@@ -1,0 +1,32 @@
+trigger: none
+## Linux or windows 2025 gives error 
+## self hosted also gives error no sql packages
+## sqlcmd can't be run directly into powershell 
+## in fw just allow azure resources 
+pool:
+  vmImage: windows-latest
+
+steps:
+- task: SqlAzureDacpacDeployment@1
+  inputs:
+    azureSubscription: 'Azure Cloud'
+    AuthenticationType: 'server'
+    ServerName: 'mssqlserver-oaq7m.database.windows.net'
+    DatabaseName: 'master'
+    SqlUsername: 'aj'
+    SqlPassword: 'nooPho4ae5ooyai2'
+    deployType: 'InlineSqlTask'
+    SqlInline: 'create database tax;'
+    IpDetectionMethod: 'AutoDetect'
+
+- task: SqlAzureDacpacDeployment@1
+  inputs:
+    azureSubscription: 'Azure Cloud'
+    AuthenticationType: 'server'
+    ServerName: 'mssqlserver-oaq7m.database.windows.net'
+    DatabaseName: 'tax'
+    SqlUsername: 'aj'
+    SqlPassword: 'nooPho4ae5ooyai2'
+    deployType: 'SqlTask'
+    SqlFile: 'dotnet-sql-app-code.sql'
+    IpDetectionMethod: 'AutoDetect'
